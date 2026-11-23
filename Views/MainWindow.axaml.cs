@@ -56,7 +56,7 @@ namespace RaytolfasLauncher
         private MinecraftLauncher? launcher;
         private LauncherSettings settings = new LauncherSettings();
         private readonly DiscordRpcClient discordClientID = new DiscordRpcClient("1472589510742118400");
-        private readonly string currentVersion = "0.1.0";
+        private readonly string currentVersion = "1.0";
         private readonly string updateUrl = "https://raw.githubusercontent.com/Raytolfas/Assets/refs/heads/main/RaytolfasLauncherMC/update.json";
         private const string ElyByProfileApiBaseUrl = "https://authserver.ely.by";
         private const string AuthlibInjectorLatestReleaseApiUrl = "https://api.github.com/repos/yushijinhun/authlib-injector/releases/latest";
@@ -139,8 +139,12 @@ namespace RaytolfasLauncher
                     }
                 };
 
+                ApplyUiScale();
+                this.SizeChanged += (s, e) => UpdateBottomBarLayout();
+
                 this.Loaded += async (s, e) =>
                 {
+                    UpdateBottomBarLayout();
                     await CheckForUpdates();
                 };
             }
@@ -197,6 +201,14 @@ namespace RaytolfasLauncher
             StatusLabel.Text = T("main.status.preparing");
             if (RecentLaunchesTitle != null) RecentLaunchesTitle.Text = T("recent.title");
             if (RecentEmptyText != null) RecentEmptyText.Text = T("recent.empty");
+            if (OpenScreenshotsFolderBtn != null) OpenScreenshotsFolderBtn.Content = T("screenshots.open_folder");
+            if (CopyScreenshotBtn != null) CopyScreenshotBtn.Content = T("screenshots.copy");
+            if (DeleteScreenshotBtn != null) DeleteScreenshotBtn.Content = T("screenshots.delete");
+
+            if (NavHomeBtn != null) ToolTip.SetTip(NavHomeBtn, T("nav.home"));
+            if (NavModpacksBtn != null) ToolTip.SetTip(NavModpacksBtn, T("nav.modpacks"));
+            if (NavScreenshotsBtn != null) ToolTip.SetTip(NavScreenshotsBtn, T("nav.screenshots"));
+            if (NavSettingsBtn != null) ToolTip.SetTip(NavSettingsBtn, T("nav.settings"));
 
             SettingsTitleText.Text = T("settings.title");
             BackgroundLabel.Text = T("settings.background");
@@ -247,14 +259,14 @@ namespace RaytolfasLauncher
 
         private void ApplyAvatarVisibility()
         {
-            if (PlayerAvatarContainer == null)
-                return;
-
             bool showAvatar = settings.ShowAccountAvatar;
-            PlayerAvatarContainer.IsVisible = showAvatar;
+            if (SidebarAccountBtn != null)
+                SidebarAccountBtn.IsVisible = showAvatar;
+
             if (!showAvatar)
             {
-                PlayerAvatar.Source = null;
+                if (SidebarPlayerAvatar != null)
+                    SidebarPlayerAvatar.Source = null;
             }
             else if (AccountSelector?.SelectedItem is ComboBoxItem item && item.Tag is AccountData account)
             {
@@ -398,18 +410,14 @@ namespace RaytolfasLauncher
         {
             AccountSelector.SelectionChanged -= AccountSelector_SelectionChanged;
             AccountSelector.Items.Clear();
+            var template = this.Resources["AccountItemTemplate"] as Avalonia.Controls.Templates.IDataTemplate;
             foreach (var acc in settings.Accounts)
             {
-                string icon = acc.Type switch
-                {
-                    "Microsoft" => "🔑 ",
-                    "ElyBy" => "🦋 ",
-                    _ => "👤 "
-                };
                 AccountSelector.Items.Add(new ComboBoxItem
                 {
-                    Content = $"{icon}{acc.Username}",
-                    Tag = acc
+                    Content = acc,
+                    Tag = acc,
+                    ContentTemplate = template
                 });
             }
 
@@ -477,8 +485,8 @@ namespace RaytolfasLauncher
 
             if (acc.AvatarBitmap != null)
             {
-                PlayerAvatar.Source = acc.AvatarBitmap;
-                SidebarPlayerAvatar.Source = acc.AvatarBitmap;
+                if (SidebarPlayerAvatar != null)
+                    SidebarPlayerAvatar.Source = acc.AvatarBitmap;
             }
 
             try
@@ -493,8 +501,8 @@ namespace RaytolfasLauncher
                 if (bmp != null)
                 {
                     acc.AvatarBitmap = bmp;
-                    PlayerAvatar.Source = bmp;
-                    SidebarPlayerAvatar.Source = bmp;
+                    if (SidebarPlayerAvatar != null)
+                        SidebarPlayerAvatar.Source = bmp;
                 }
             }
             catch
@@ -887,21 +895,30 @@ namespace RaytolfasLauncher
             {
                 var uri = new Uri("avares://RaytolfasLauncher/Assets/background.png");
                 if (AssetLoader.Exists(uri))
-                    MainBgImage.Source = new Bitmap(AssetLoader.Open(uri));
+                {
+                    using var stream = AssetLoader.Open(uri);
+                    var blurred = ImageBlurHelper.BlurImage(stream, 24f);
+                    MainBgImage.Source = blurred ?? new Bitmap(AssetLoader.Open(uri));
+                }
                 settings.CustomBackgroundPath = "";
             }
             else
             {
                 try
                 {
-                    MainBgImage.Source = new Bitmap(path);
+                    var blurred = ImageBlurHelper.BlurImageFile(path, 24f);
+                    MainBgImage.Source = blurred ?? new Bitmap(path);
                     settings.CustomBackgroundPath = path;
                 }
                 catch
                 {
                     var uri = new Uri("avares://RaytolfasLauncher/Assets/background.png");
                     if (AssetLoader.Exists(uri))
-                        MainBgImage.Source = new Bitmap(AssetLoader.Open(uri));
+                    {
+                        using var stream = AssetLoader.Open(uri);
+                        var blurred = ImageBlurHelper.BlurImage(stream, 24f);
+                        MainBgImage.Source = blurred ?? new Bitmap(AssetLoader.Open(uri));
+                    }
                     settings.CustomBackgroundPath = "";
                 }
             }
@@ -1521,7 +1538,8 @@ namespace RaytolfasLauncher
                 return (true, await CreateOfflineSessionAsync(acc.Username, logWindow), true, settings.EnableElyBySkins);
             }
 
-            string manualNick = NormalizeNickname((AccountSelector.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "");
+            string manualNick = ((AccountSelector.SelectedItem as ComboBoxItem)?.Tag as AccountData)?.Username
+                ?? NormalizeNickname((AccountSelector.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "");
             if (string.IsNullOrEmpty(manualNick))
             {
                 await RayMessageBox.ShowAsync(this, T("launch.message.enter_nick"), T("launch.message.error_title"));
@@ -1825,6 +1843,17 @@ namespace RaytolfasLauncher
                     ToolTip.SetTip(ExpandVersionBtn, $"Развернуть выбор версии ({sel.Content})");
                 }
             }
+            UpdateBottomBarLayout();
+        }
+
+        private void UpdateBottomBarLayout()
+        {
+            if (BottomAccountBar == null) return;
+            double w = this.Bounds.Width > 0 ? this.Bounds.Width : this.Width;
+            double scale = settings?.UiScaleFactor ?? 1.0;
+            double effectiveWidth = w / (scale > 0 ? scale : 1.0);
+            double threshold = isVersionBarCollapsed ? 920 : 1140;
+            BottomAccountBar.IsVisible = effectiveWidth >= threshold;
         }
 
         private void AddVersionToBox(string name, string? type, string dir)
@@ -2689,14 +2718,7 @@ namespace RaytolfasLauncher
 
             if (PageHeaderTitle != null)
             {
-                PageHeaderTitle.Text = viewName switch
-                {
-                    "home" => T("nav.home"),
-                    "catalog" => T("nav.modrinth"),
-                    "screenshots" => T("nav.screenshots"),
-                    "settings" => T("nav.settings"),
-                    _ => T("nav.home")
-                };
+                PageHeaderTitle.Text = "Raytolfas Launcher";
             }
 
             if (viewName == "screenshots")
@@ -2744,7 +2766,27 @@ namespace RaytolfasLauncher
 
         private void NavCatalog_Click(object? sender, RoutedEventArgs e) => SwitchView("catalog");
         private void NavScreenshots_Click(object? sender, RoutedEventArgs e) => SwitchView("screenshots");
-        private void NavSettings_Click(object? sender, RoutedEventArgs e) => SwitchView("settings");
+        private async void NavSettings_Click(object? sender, RoutedEventArgs e)
+        {
+            var win = new SettingsWindow(settings, javaProfiles);
+            await win.ShowDialog(this);
+            if (win.SettingsSaved)
+            {
+                ApplyUiScale();
+                SetCustomBackground(settings.CustomBackgroundPath);
+                currentLanguage = LocalizationManager.NormalizeLanguage(settings.Language);
+                ApplyLocalization();
+                LoadVersions();
+            }
+        }
+
+        private void ApplyUiScale()
+        {
+            if (MainLayoutTransformControl == null) return;
+            double factor = settings?.UiScaleFactor ?? 1.0;
+            MainLayoutTransformControl.LayoutTransform = new ScaleTransform(factor, factor);
+            UpdateBottomBarLayout();
+        }
         #endregion
 
         #region Direct Connect & Server Ping
@@ -3089,12 +3131,21 @@ namespace RaytolfasLauncher
         #endregion
 
         #region Recent Game Launches
+        private static string CleanAccountName(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return "";
+            foreach (var p in new[] { "🔑", "🦋", "👤" })
+                raw = raw.Replace(p, "");
+            return raw.Trim();
+        }
+
         private void RecordRecentLaunch(string versionId)
         {
             try
             {
-                string accountName = (AccountSelector?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Player";
-                accountName = NormalizeNickname(accountName);
+                string accountName = ((AccountSelector?.SelectedItem as ComboBoxItem)?.Tag as AccountData)?.Username
+                    ?? NormalizeNickname((AccountSelector?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Player");
+                accountName = CleanAccountName(accountName);
 
                 if (settings.RecentLaunches == null)
                     settings.RecentLaunches = new List<RecentGameLaunch>();
@@ -3123,6 +3174,10 @@ namespace RaytolfasLauncher
             try
             {
                 var list = settings.RecentLaunches ?? new List<RecentGameLaunch>();
+                foreach (var r in list)
+                {
+                    r.AccountName = CleanAccountName(r.AccountName);
+                }
                 if (RecentLaunchesList != null)
                 {
                     RecentLaunchesList.ItemsSource = null;

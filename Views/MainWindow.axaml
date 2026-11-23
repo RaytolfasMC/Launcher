@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RaytolfasLauncher"
         x:Class="RaytolfasLauncher.MainWindow"
         Title="Raytolfas Launcher"
         Height="620"
@@ -14,6 +15,12 @@
         CanResize="True">
 
     <Window.Resources>
+        <DataTemplate x:Key="AccountItemTemplate" DataType="local:AccountData">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Image Source="{Binding TypeSvgImage}" Width="16" Height="16" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Username}" VerticalAlignment="Center" Foreground="White" FontSize="13"/>
+            </StackPanel>
+        </DataTemplate>
         <StreamGeometry x:Key="IconPlay">M23 12C23 18.0751 18.0751 23 12 23C5.9249 23 1 18.0751 1 12C1 5.9249 5.9249 1 12 1C18.0751 1 23 5.9249 23 12ZM7.962734 9.105541C7.962734 7.53467 9.690636 6.576985 11.022732 7.409545L16.332265 10.728003C17.272267 11.315504 17.272267 12.684496 16.332265 13.271998L11.022732 16.590456C9.690636 17.423016 7.962734 16.465331 7.962734 14.89446Z</StreamGeometry>
         <StreamGeometry x:Key="IconModpacks">M2.3084 7.0066L12 12M12 12L21.6916 7.0066M12 12L12 22M7 4.3017L17 9.4239M12.9075 2.2178L20.9075 6.2914C21.5779 6.6328 22 7.3214 22 8.0737L22 15.9263C22 16.6786 21.5779 17.3672 20.9075 17.7086L12.9075 21.7822C12.3373 22.0726 11.6627 22.0726 11.0925 21.7822L3.0925 17.7086C2.4221 17.3672 2 16.6786 2 15.9263L2 8.0737C2 7.3214 2.4221 6.6328 3.0925 6.2914L11.0925 2.2178C11.6627 1.9274 12.3373 1.9274 12.9075 2.2178Z</StreamGeometry>
         <StreamGeometry x:Key="IconPictures">M3 8V18C3 19.6569 4.3431 21 6 21H16M10 3H18C19.6569 3 21 4.3431 21 6V14C21 15.6569 19.6569 17 18 17H10C8.3431 17 7 15.6569 7 14V6C7 4.3431 8.3431 3 10 3ZM7 14L14.3292 10.3354C14.7515 10.1243 15.2485 10.1243 15.6708 10.3354L21 13 M12 7C12 7.55228 11.5523 8 11 8C10.4477 8 10 7.55228 10 7C10 6.4477 10.4477 6 11 6C11.5523 6 12 6.4477 12 7Z</StreamGeometry>
@@ -27,13 +34,14 @@
         <StreamGeometry x:Key="IconWinClose">m19.41 18l7.29-7.29a1 1 0 0 0-1.41-1.41L18 16.59l-7.29-7.3A1 1 0 0 0 9.3 10.7l7.29 7.3l-7.3 7.29a1 1 0 1 0 1.41 1.41l7.3-7.29l7.29 7.29a1 1 0 0 0 1.41-1.41Z</StreamGeometry>
     </Window.Resources>
 
-    <Border x:Name="RootWindowBorder" CornerRadius="16" Background="#111215" ClipToBounds="True" BorderBrush="#262933" BorderThickness="1">
-        <Panel>
-                        <Image x:Name="MainBgImage" Stretch="UniformToFill" Source="avares://RaytolfasLauncher/Assets/background.png" Opacity="0.38"/>
+    <Border x:Name="RootWindowBorder" CornerRadius="16" Background="#111215" BorderBrush="#262933" BorderThickness="1" ClipToBounds="True">
+        <Panel x:Name="RootContentPanel">
+            <Image x:Name="MainBgImage" Stretch="UniformToFill" Source="avares://RaytolfasLauncher/Assets/background.png" Opacity="0.38"/>
             <Border Background="#D8101218"/>
 
+            <LayoutTransformControl x:Name="MainLayoutTransformControl">
             <Grid ColumnDefinitions="72,*">
-                        <Border Grid.Column="0" Background="#14161C" BorderBrush="#20222A" BorderThickness="0,0,1,0">
+                <Border Grid.Column="0" Background="#14161C" BorderBrush="#20222A" BorderThickness="0,0,1,0">
                 <Grid RowDefinitions="Auto,*,Auto" Margin="0,16,0,16">
                                         <Border Grid.Row="0" Width="44" Height="44" CornerRadius="12" Background="#1E2028" HorizontalAlignment="Center" Margin="0,0,0,16">
                         <Image Source="avares://RaytolfasLauncher/Assets/logo.png" Width="30" Height="30" Stretch="Uniform"/>
@@ -77,11 +85,11 @@
             </Border>
 
                         <Grid Grid.Column="1" RowDefinitions="50,*">
-                                <Grid Grid.Row="0" Margin="20,10,16,0" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="20,10,16,0" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                        <TextBlock x:Name="PageHeaderTitle" Text="ИГРА" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="PageHeaderTitle" Text="Raytolfas Launcher" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                         <Border Background="#211833" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
-                            <TextBlock x:Name="VersionText" Text="v0.1.0" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="VersionText" Text="v1.0" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
                         </Border>
                     </StackPanel>
 
@@ -145,25 +153,8 @@
                         </Border>
 
                                                 <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,10,0,10">
-                                                        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                                                        <Grid Grid.Row="0" Margin="0,0,0,10">
                                 <TextBlock x:Name="RecentLaunchesTitle" Text="ИСТОРИЯ ЗАПУСКОВ" Foreground="#8E9297" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
-
-                                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                    <Border x:Name="PlayerAvatarContainer" Width="28" Height="28" CornerRadius="6" Background="#262933" ClipToBounds="True">
-                                        <Image x:Name="PlayerAvatar" Stretch="UniformToFill"/>
-                                    </Border>
-                                    <ComboBox x:Name="AccountSelector" Height="30" Classes="RayCombo" MinWidth="140" SelectionChanged="AccountSelector_SelectionChanged"/>
-                                    <Button Classes="WinActionBtn" Click="OpenAccountManager_Click" Width="30" Height="30" CornerRadius="6" Background="#1E2028" ToolTip.Tip="Управление аккаунтами">
-                                        <Viewbox Width="14" Height="14">
-                                            <Canvas Width="24" Height="24">
-                                                <Path Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"
-                                                      Data="M12 3H6C4.34315 3 3 4.34315 3 6V18C3 19.6569 4.34315 21 6 21H18C19.6569 21 21 19.6569 21 18V12M10.5 13.5L14.6248 11.8501L20.4874 5.9874C21.1709 5.304 21.1709 4.196 20.4874 3.5126C19.804 2.8291 18.696 2.8291 18.0126 3.5126L12.1499 9.3752Z"/>
-                                            </Canvas>
-                                        </Viewbox>
-                                    </Button>
-                                    <TextBlock x:Name="AccountSectionLabel" IsVisible="False"/>
-                                    <TextBlock x:Name="VersionSectionLabel" IsVisible="False"/>
-                                </StackPanel>
                             </Grid>
 
                                                         <Grid Grid.Row="1" MinHeight="76" VerticalAlignment="Top" Margin="0,0,0,14">
@@ -178,7 +169,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border Width="240" Background="#12FFFFFF" BorderBrush="#20FFFFFF" BorderThickness="1" CornerRadius="12" Padding="14,10" VerticalAlignment="Top">
+                                                <Border Width="240" Background="#D914161C" BorderBrush="#20222A" BorderThickness="1" CornerRadius="12" Padding="14,10" VerticalAlignment="Top">
                                                     <Grid ColumnDefinitions="*,Auto">
                                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="3">
                                                             <TextBlock Text="{Binding VersionId}" Foreground="White" FontWeight="Bold" FontSize="13" TextTrimming="CharacterEllipsis"/>
@@ -208,7 +199,7 @@
 
                                                         <Grid Grid.Row="1">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
-                                                                        <Button x:Name="RefreshBtn" Click="Refresh_Click" Width="44" Height="44" CornerRadius="10" Background="#161822" BorderBrush="#252A38" BorderThickness="1" Cursor="Hand" ToolTip.Tip="Обновить список версий">
+                                                                        <Button x:Name="RefreshBtn" Click="Refresh_Click" Width="44" Height="44" CornerRadius="10" Background="#D9161822" BorderBrush="#252A38" BorderThickness="1" Cursor="Hand" ToolTip.Tip="Обновить список версий">
                                         <Viewbox Width="18" Height="18">
                                             <Canvas Width="24" Height="24">
                                                 <Path Stroke="White" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"
@@ -217,7 +208,7 @@
                                         </Viewbox>
                                     </Button>
 
-                                                                        <Border x:Name="VersionExpandedBar" Background="#161822" BorderBrush="#252A38" BorderThickness="1" CornerRadius="10" Width="280" Height="44" IsVisible="True">
+                                                                        <Border x:Name="VersionExpandedBar" Background="#D9161822" BorderBrush="#252A38" BorderThickness="1" CornerRadius="10" Width="280" Height="44" IsVisible="True">
                                         <Grid ColumnDefinitions="*,40">
                                             <ComboBox Grid.Column="0" x:Name="VersionBox" Height="42" Classes="RayCombo" BorderThickness="0" Background="Transparent" HorizontalAlignment="Stretch" SelectionChanged="VersionBox_SelectionChanged"/>
                                             <Button Grid.Column="1" x:Name="CollapseVersionBtn" Click="ToggleVersionBar_Click" Width="40" Height="42" CornerRadius="0,9,9,0" Background="#1C202C" Cursor="Hand" ToolTip.Tip="Свернуть выбор версии">
@@ -232,7 +223,7 @@
                                         </Grid>
                                     </Border>
 
-                                                                        <Button x:Name="ExpandVersionBtn" Click="ToggleVersionBar_Click" Width="44" Height="44" CornerRadius="10" Background="#161822" BorderBrush="#252A38" BorderThickness="1" Cursor="Hand" ToolTip.Tip="Развернуть выбор версии" IsVisible="False">
+                                                                        <Button x:Name="ExpandVersionBtn" Click="ToggleVersionBar_Click" Width="44" Height="44" CornerRadius="10" Background="#D9161822" BorderBrush="#252A38" BorderThickness="1" Cursor="Hand" ToolTip.Tip="Развернуть выбор версии" IsVisible="False">
                                         <Viewbox Width="18" Height="18">
                                             <Canvas Width="24" Height="24">
                                                 <Path Fill="White" Data="M15 3H18C19.65685 3 21 4.34315 21 6V18C21 19.65685 19.65685 21 18 21H15V3Z"/>
@@ -253,6 +244,29 @@
                                         </Button.Styles>
                                     </Button>
                                 </StackPanel>
+
+                                <StackPanel x:Name="BottomAccountBar" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="8">
+                                    <ComboBox x:Name="AccountSelector" Height="44" Classes="RayCombo" MinWidth="140" VerticalAlignment="Center" SelectionChanged="AccountSelector_SelectionChanged">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="local:AccountData">
+                                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                                    <Image Source="{Binding TypeSvgImage}" Width="16" Height="16" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Username}" VerticalAlignment="Center" Foreground="White" FontSize="13"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <Button Classes="WinActionBtn" Click="OpenAccountManager_Click" Width="40" Height="44" CornerRadius="8" Background="#1E2028" ToolTip.Tip="Управление аккаунтами">
+                                        <Viewbox Width="16" Height="16">
+                                            <Canvas Width="24" Height="24">
+                                                <Path Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"
+                                                      Data="M12 3H6C4.34315 3 3 4.34315 3 6V18C3 19.6569 4.34315 21 6 21H18C19.6569 21 21 19.6569 21 18V12M10.5 13.5L14.6248 11.8501L20.4874 5.9874C21.1709 5.304 21.1709 4.196 20.4874 3.5126C19.804 2.8291 18.696 2.8291 18.0126 3.5126L12.1499 9.3752Z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                    </Button>
+                                    <TextBlock x:Name="AccountSectionLabel" IsVisible="False"/>
+                                    <TextBlock x:Name="VersionSectionLabel" IsVisible="False"/>
+                                </StackPanel>
                             </Grid>
 
                                                         <CheckBox x:Name="CheckBoxForce" IsVisible="False"/>
@@ -261,11 +275,7 @@
 
                                         <Grid x:Name="ViewScreenshots" RowDefinitions="Auto,*" IsVisible="False">
                         <Grid Grid.Row="0" Margin="0,0,0,12" ColumnDefinitions="*,Auto">
-                            <StackPanel>
-                                <TextBlock Text="ГАЛЕРЕЯ СКРИНШОТОВ" Foreground="White" FontSize="16" FontWeight="Bold"/>
-                                <TextBlock Text="Смотрите, копируйте и делитесь скриншотами из игры" Foreground="#8E9297" FontSize="11"/>
-                            </StackPanel>
-                            <Button Grid.Column="1" Content="Открыть папку" Click="OpenScreenshotsFolder_Click" Background="#20232B" Foreground="White" CornerRadius="8" Padding="12,6" Cursor="Hand" FontSize="12"/>
+                            <Button x:Name="OpenScreenshotsFolderBtn" Grid.Column="1" Content="Открыть папку" Click="OpenScreenshotsFolder_Click" Background="#20232B" Foreground="White" CornerRadius="8" Padding="12,6" Cursor="Hand" FontSize="12"/>
                         </Grid>
 
                         <Border Grid.Row="1" Classes="ModernCard" Padding="12">
@@ -299,10 +309,7 @@
                     </Grid>
 
                                         <Grid x:Name="ViewSettings" RowDefinitions="Auto,*" IsVisible="False">
-                        <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                            <TextBlock x:Name="SettingsTitleText" Text="НАСТРОЙКИ" Foreground="White" FontSize="16" FontWeight="Bold"/>
-                            <TextBlock Text="Конфигурация памяти, Java, путей и внешнего вида" Foreground="#8E9297" FontSize="11"/>
-                        </StackPanel>
+                        <TextBlock x:Name="SettingsTitleText" Grid.Row="0" Text="НАСТРОЙКИ" Foreground="White" FontSize="16" FontWeight="Bold" Margin="0,0,0,12"/>
 
                         <Border Grid.Row="1" Classes="ModernCard" Padding="16">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -423,6 +430,7 @@
                 </Panel>
             </Grid>
         </Grid>
+        </LayoutTransformControl>
 
                 <Border x:Name="ScreenshotViewerOverlay" IsVisible="False" Background="#E60D0E12" ZIndex="1000" Focusable="True" KeyDown="ScreenshotViewer_KeyDown">
             <Grid RowDefinitions="50,*,40" Margin="24,16,24,16">
@@ -441,7 +449,7 @@
                 </Grid>
 
                                 <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Stretch" Margin="0,12,0,12">
-                                        <Button Grid.Column="0" Classes="WinActionBtn" Click="ViewerPrev_Click" Width="44" Height="44" CornerRadius="22" Background="#331A1C23" VerticalAlignment="Center" ToolTip.Tip="Предыдущий (Влево)">
+                                        <Button Grid.Column="0" Classes="WinActionBtn" Click="ViewerPrev_Click" Width="44" Height="44" CornerRadius="22" Background="#551A1C23" BorderBrush="#262933" BorderThickness="1" VerticalAlignment="Center" ToolTip.Tip="Предыдущий (Влево)">
                         <Viewbox Width="20" Height="20">
                             <Canvas Width="24" Height="24">
                                 <Path Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"
@@ -454,7 +462,7 @@
                         <Image x:Name="ViewerBigImage" Stretch="Uniform" MaxHeight="600" MaxWidth="960"/>
                     </Border>
 
-                                        <Button Grid.Column="2" Classes="WinActionBtn" Click="ViewerNext_Click" Width="44" Height="44" CornerRadius="22" Background="#331A1C23" VerticalAlignment="Center" ToolTip.Tip="Следующий (Вправо)">
+                                        <Button Grid.Column="2" Classes="WinActionBtn" Click="ViewerNext_Click" Width="44" Height="44" CornerRadius="22" Background="#551A1C23" BorderBrush="#262933" BorderThickness="1" VerticalAlignment="Center" ToolTip.Tip="Следующий (Вправо)">
                         <Viewbox Width="20" Height="20">
                             <Canvas Width="24" Height="24">
                                 <Path Stroke="{Binding $parent[Button].Foreground}" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"

@@ -111,7 +111,74 @@ namespace RaytolfasLauncher
                     return bmp;
             }
 
-            return null;
+            return GetDefaultSteveAvatar(cacheKey, localFile);
+        }
+
+        private static Bitmap? GetDefaultSteveAvatar(string? cacheKey = null, string? localFile = null)
+        {
+            try
+            {
+                if (cacheKey != null && memoryCache.TryGetValue("default_steve", out var cached))
+                    return cached;
+
+                using var bitmap = new SKBitmap(64, 64);
+                using (var canvas = new SKCanvas(bitmap))
+                {
+                    var hairColor = new SKColor(0x4A, 0x32, 0x1E);
+                    var skinColor = new SKColor(0xD4, 0xA3, 0x83);
+                    var eyeWhite = new SKColor(0xFF, 0xFF, 0xFF);
+                    var eyePupil = new SKColor(0x3C, 0x44, 0xAA);
+                    var mouthColor = new SKColor(0x6A, 0x3B, 0x24);
+                    var noseColor = new SKColor(0xBC, 0x8B, 0x6E);
+
+                    using var paint = new SKPaint { Style = SKPaintStyle.Fill };
+
+                    paint.Color = hairColor;
+                    canvas.DrawRect(0, 0, 64, 16, paint);
+
+                    paint.Color = skinColor;
+                    canvas.DrawRect(0, 16, 64, 48, paint);
+
+                    paint.Color = hairColor;
+                    canvas.DrawRect(0, 16, 8, 16, paint);
+                    canvas.DrawRect(56, 16, 8, 16, paint);
+
+                    paint.Color = eyeWhite;
+                    canvas.DrawRect(8, 24, 16, 8, paint);
+                    paint.Color = eyePupil;
+                    canvas.DrawRect(16, 24, 8, 8, paint);
+
+                    paint.Color = eyeWhite;
+                    canvas.DrawRect(40, 24, 16, 8, paint);
+                    paint.Color = eyePupil;
+                    canvas.DrawRect(40, 24, 8, 8, paint);
+
+                    paint.Color = noseColor;
+                    canvas.DrawRect(24, 32, 16, 8, paint);
+
+                    paint.Color = mouthColor;
+                    canvas.DrawRect(16, 40, 32, 8, paint);
+                }
+
+                using var img = SKImage.FromBitmap(bitmap);
+                using var data = img.Encode(SKEncodedImageFormat.Png, 100);
+                var bytes = data.ToArray();
+
+                if (localFile != null)
+                {
+                    try { File.WriteAllBytes(localFile, bytes); } catch { }
+                }
+
+                using var ms = new MemoryStream(bytes);
+                var bmp = new Bitmap(ms);
+                memoryCache["default_steve"] = bmp;
+                if (cacheKey != null) memoryCache[cacheKey] = bmp;
+                return bmp;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private static async Task<Bitmap?> TryFetchElyBySkin(string username, string cacheKey, string? localFile)

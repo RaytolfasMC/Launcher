@@ -23,7 +23,7 @@ namespace RaytolfasLauncher
 
         static ModrinthIconHelper()
         {
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/0.1.0 (github.com/Raytolfas/RaytolfasLauncher)");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/1.0 (github.com/RaytolfasMC/Launcher)");
         }
 
         public static async Task LoadIconAsync(ModrinthProjectHit hit, string baseDir)

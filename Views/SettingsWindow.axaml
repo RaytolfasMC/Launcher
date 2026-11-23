@@ -1,0 +1,226 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="RaytolfasLauncher.SettingsWindow"
+        Title="Настройки"
+        Height="540"
+        Width="760"
+        MinHeight="460"
+        MinWidth="680"
+        Background="Transparent"
+        WindowStartupLocation="CenterOwner"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        CanResize="True">
+
+    <Window.Resources>
+        <StreamGeometry x:Key="IconClose">m19.41 18l7.29-7.29a1 1 0 0 0-1.41-1.41L18 16.59l-7.29-7.3A1 1 0 0 0 9.3 10.7l7.29 7.3l-7.3 7.29a1 1 0 1 0 1.41 1.41l7.3-7.29l7.29 7.29a1 1 0 0 0 1.41-1.41Z</StreamGeometry>
+    </Window.Resources>
+
+    <Grid>
+        <Border x:Name="RootBorder" BorderBrush="#262933" BorderThickness="1" CornerRadius="16" Background="#111215" ClipToBounds="True" Margin="5">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Border Grid.Row="0" BorderBrush="#20222A" BorderThickness="0,0,0,1" Padding="20,14,16,14" Background="Transparent" PointerPressed="Header_PointerPressed">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock x:Name="SettingsTitleText" Text="НАСТРОЙКИ" Foreground="White" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
+
+                    <Button Grid.Column="1" Click="Close_Click" Width="32" Height="32" CornerRadius="8" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ToolTip.Tip="Закрыть">
+                        <PathIcon Data="{StaticResource IconClose}" Width="12" Height="12" Foreground="#8E9297"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" ColumnDefinitions="190,*">
+                <Border Grid.Column="0" Background="#14161C" BorderBrush="#20222A" BorderThickness="0,0,1,0">
+                    <StackPanel Spacing="4" Margin="10,12,10,12">
+                        <Button x:Name="TabGeneralBtn" Click="Tab_Click" Tag="general" Classes="SettingsNavBtn active" HorizontalAlignment="Stretch">
+                            <TextBlock x:Name="TabGeneralText" Text="Общие" FontSize="12" FontWeight="SemiBold"/>
+                        </Button>
+                        <Button x:Name="TabJavaBtn" Click="Tab_Click" Tag="java" Classes="SettingsNavBtn" HorizontalAlignment="Stretch">
+                            <TextBlock x:Name="TabJavaText" Text="Java и память" FontSize="12" FontWeight="SemiBold"/>
+                        </Button>
+                        <Button x:Name="TabGameBtn" Click="Tab_Click" Tag="game" Classes="SettingsNavBtn" HorizontalAlignment="Stretch">
+                            <TextBlock x:Name="TabGameText" Text="Игра и экран" FontSize="12" FontWeight="SemiBold"/>
+                        </Button>
+                        <Button x:Name="TabAppearanceBtn" Click="Tab_Click" Tag="appearance" Classes="SettingsNavBtn" HorizontalAlignment="Stretch">
+                            <TextBlock x:Name="TabAppearanceText" Text="Внешний вид" FontSize="12" FontWeight="SemiBold"/>
+                        </Button>
+                        <Button x:Name="TabAboutBtn" Click="Tab_Click" Tag="about" Classes="SettingsNavBtn" HorizontalAlignment="Stretch">
+                            <TextBlock x:Name="TabAboutText" Text="О программе" FontSize="12" FontWeight="SemiBold"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer x:Name="SettingsScrollViewer" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="20,12,20,12" ClipToBounds="True">
+                    <Panel x:Name="SettingsContentPanel" HorizontalAlignment="Stretch">
+                        <StackPanel x:Name="SectionGeneral" Spacing="16" IsVisible="True" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="LanguageLabel" Text="ЯЗЫК ИНТЕРФЕЙСА" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <ComboBox x:Name="LanguageBox" Height="36" Classes="RayCombo" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Name="BehaviorLabel" Text="ПОВЕДЕНИЕ ЛАУНЧЕРА" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <CheckBox x:Name="CbHideLauncher" Content="Скрывать лаунчер при запуске игры" Classes="RayCheck"/>
+                                <CheckBox x:Name="CbShowAvatar" Content="Показывать аватарку игрока" Classes="RayCheck"/>
+                                <CheckBox x:Name="CbOpenLogWindow" Content="Открывать окно логов при старте" Classes="RayCheck"/>
+                                <CheckBox x:Name="CbDiscordRPC" Content="Discord Rich Presence статус" Classes="RayCheck"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="SectionJava" Spacing="16" IsVisible="False" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock x:Name="RamTitleLabel" Text="ВЫДЕЛЕНИЕ ОПЕРАТИВНОЙ ПАМЯТИ" Foreground="#8E9297" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock x:Name="RamValueText" Text="2048 MB" Foreground="#A250FF" FontWeight="Bold" FontSize="12" Cursor="Hand"
+                                                   ToolTip.Tip="Нажмите, чтобы ввести значение вручную" PointerPressed="RamValueText_PointerPressed"/>
+                                        <TextBox x:Name="RamInputBox" Text="2048" Width="68" Height="26" FontSize="12" FontWeight="Bold"
+                                                 Foreground="#A250FF" Background="#161822" BorderBrush="#A250FF" BorderThickness="1"
+                                                 CornerRadius="4" Padding="4,2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                 IsVisible="False" LostFocus="RamInputBox_LostFocus" KeyDown="RamInputBox_KeyDown"/>
+                                    </StackPanel>
+                                </Grid>
+                                <Slider x:Name="RamSlider" Minimum="1024" Maximum="16384" Value="2048"
+                                        SmallChange="512" LargeChange="512" TickFrequency="512" IsSnapToTickEnabled="True"/>
+                                <Grid ColumnDefinitions="*,*,*,*,*">
+                                    <TextBlock Grid.Column="0" Text="1GB" Foreground="Gray" FontSize="9" HorizontalAlignment="Left"/>
+                                    <TextBlock Grid.Column="1" Text="4GB" Foreground="Gray" FontSize="9" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="8GB" Foreground="Gray" FontSize="9" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" Text="12GB" Foreground="Gray" FontSize="9" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="4" Text="16GB" Foreground="Gray" FontSize="9" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="JavaProfileLabel" Text="ПРОФИЛЬ JAVA" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <ComboBox x:Name="JavaProfileBox" Height="36" Classes="RayCombo" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="JavaPathLabel" Text="ПУТЬ К JAVA (Оставьте пустым для авто)" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBox x:Name="JavaPathBox" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="8"/>
+                                    <Button x:Name="BrowseJavaButton" Grid.Column="1" Content="ОБЗОР" Click="SelectJavaPath_Click" Width="80" Margin="8,0,0,0" Background="#1E2028" Foreground="White" CornerRadius="6" Cursor="Hand"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="JavaArgsLabel" Text="АРГУМЕНТЫ JVM" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <TextBox x:Name="JavaArgsBox" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="8"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="SectionGame" Spacing="16" IsVisible="False" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="GameFolderLabel" Text="ПАПКА УСТАНОВКИ MINECRAFT" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <TextBox x:Name="PathBox" IsReadOnly="True" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="8"/>
+                                    <Button x:Name="BrowsePathButton" Grid.Column="1" Content="ОБЗОР" Click="SelectPath_Click" Width="80" Margin="8,0,0,0" Background="#1E2028" Foreground="White" CornerRadius="6" Cursor="Hand"/>
+                                    <Button x:Name="ResetPathButton" Grid.Column="2" Content="СБРОС" Click="ResetPath_Click" Width="70" Margin="6,0,0,0" Background="#1A1C24" Foreground="#8E9297" CornerRadius="6" Cursor="Hand"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="ResolutionLabel" Text="РАЗРЕШЕНИЕ ОКНА ИГРЫ" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBox x:Name="WinWidthBox" Width="80" Text="854" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="6"/>
+                                    <TextBlock Text="✕" Foreground="Gray" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="WinHeightBox" Width="80" Text="480" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="6"/>
+                                    <CheckBox x:Name="CbFullScreen" Content="Полный экран" Classes="RayCheck" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Name="VersionFiltersLabel" Text="ОТОБРАЖАТЬ ВЕРСИИ В СПИСКЕ" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal" Spacing="16">
+                                    <CheckBox x:Name="CbReleases" Content="Релизы" Classes="RayCheck" IsChecked="True"/>
+                                    <CheckBox x:Name="CbSnapshots" Content="Снапшоты" Classes="RayCheck"/>
+                                    <CheckBox x:Name="CbModded" Content="Модификации" Classes="RayCheck" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="SkinsLabel" Text="СЕТЕВЫЕ СКИНЫ" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <CheckBox x:Name="CbElyBySkins" Content="Скины и плащи Ely.by" Classes="RayCheck"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="SectionAppearance" Spacing="16" IsVisible="False" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock x:Name="UiScaleLabel" Text="МАСШТАБ ИНТЕРФЕЙСА" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                    <TextBlock x:Name="UiScaleValueText" Grid.Column="1" Text="Стандартный (100%)" Foreground="#A250FF" FontSize="11" FontWeight="Bold"/>
+                                </Grid>
+                                <Slider x:Name="UiScaleSlider" Minimum="0" Maximum="2" Value="1" SmallChange="1" LargeChange="1" IsSnapToTickEnabled="True" TickFrequency="1" Margin="0,4"/>
+                                <Grid ColumnDefinitions="*,*,*">
+                                    <TextBlock x:Name="UiScaleSmallLabel" Grid.Column="0" Text="Маленький" Foreground="#60646C" FontSize="10" HorizontalAlignment="Left"/>
+                                    <TextBlock x:Name="UiScaleStandardLabel" Grid.Column="1" Text="Стандартный" Foreground="#A250FF" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="UiScaleLargeLabel" Grid.Column="2" Text="Большой" Foreground="#60646C" FontSize="10" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Name="BackgroundLabel" Text="КАСТОМНЫЙ ФОН ЛАУНЧЕРА" Foreground="#8E9297" FontSize="10" FontWeight="Bold"/>
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <TextBox x:Name="BgPathBox" IsReadOnly="True" Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="6" Padding="8"/>
+                                    <Button x:Name="SelectBackgroundButton" Grid.Column="1" Content="ВЫБРАТЬ" Click="SelectBackground_Click" Width="85" Margin="8,0,0,0" Background="#1E2028" Foreground="White" CornerRadius="6" Cursor="Hand"/>
+                                    <Button x:Name="ResetBackgroundButton" Grid.Column="2" Content="СБРОСИТЬ" Click="ResetBackground_Click" Width="85" Margin="6,0,0,0" Background="#1A1C24" Foreground="#FF8080" CornerRadius="6" Cursor="Hand"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel x:Name="SectionAbout" Spacing="16" IsVisible="False" HorizontalAlignment="Stretch">
+                            <Border Background="#14161C" BorderBrush="#20222A" BorderThickness="1" CornerRadius="12" Padding="16">
+                                <Grid ColumnDefinitions="48,*">
+                                    <Border Grid.Column="0" Width="42" Height="42" CornerRadius="10" Background="#1E2028" VerticalAlignment="Center">
+                                        <Image Source="avares://RaytolfasLauncher/Assets/logo.png" Width="28" Height="28" Stretch="Uniform"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center" Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="Raytolfas Launcher" Foreground="White" FontWeight="Bold" FontSize="15" VerticalAlignment="Center"/>
+                                            <Border Background="#211833" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
+                                                <TextBlock Text="v1.0" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock x:Name="PoweredByLabel" Text="powered by" Foreground="#8E9297" FontSize="11" VerticalAlignment="Center"/>
+                                            <TextBlock Text="raytolfas" Foreground="#A250FF" FontWeight="SemiBold" FontSize="11" Cursor="Hand"
+                                                       TextDecorations="Underline" PointerPressed="OpenRaytolfasSite_Click" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Click="OpenLauncherSite_Click" Background="#20232B" Foreground="White" CornerRadius="8" Padding="14,8" Cursor="Hand">
+                                    <TextBlock x:Name="WebsiteBtnText" Text="Вебсайт" FontSize="12" FontWeight="SemiBold"/>
+                                </Button>
+                                <Button Click="OpenGithub_Click" Background="#20232B" Foreground="White" CornerRadius="8" Padding="14,8" Cursor="Hand">
+                                    <TextBlock x:Name="GithubBtnText" Text="Гитхаб" FontSize="12" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Panel>
+                </ScrollViewer>
+            </Grid>
+
+            <Border Grid.Row="2" Background="#14161C" BorderBrush="#20222A" BorderThickness="0,1,0,0" CornerRadius="0,0,16,16" Padding="16,12">
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                    <Button x:Name="CancelButton" Grid.Column="1" Content="ОТМЕНА" Click="Cancel_Click" Width="100" Height="36" Background="#20232B" Foreground="White" CornerRadius="8" Cursor="Hand" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,8,0"/>
+                    <Button x:Name="SaveButton" Grid.Column="2" Content="СОХРАНИТЬ" Click="Save_Click" Width="130" Height="36" Background="#A250FF" Foreground="White" FontWeight="Bold" CornerRadius="8" Cursor="Hand" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+        </Border>
+
+        <Border Height="6" VerticalAlignment="Top" Margin="12,0" Background="Transparent" Cursor="SizeNorthSouth" PointerPressed="ResizeN_PointerPressed"/>
+        <Border Height="6" VerticalAlignment="Bottom" Margin="12,0" Background="Transparent" Cursor="SizeNorthSouth" PointerPressed="ResizeS_PointerPressed"/>
+        <Border Width="6" HorizontalAlignment="Left" Margin="0,12" Background="Transparent" Cursor="SizeWestEast" PointerPressed="ResizeW_PointerPressed"/>
+        <Border Width="6" HorizontalAlignment="Right" Margin="0,12" Background="Transparent" Cursor="SizeWestEast" PointerPressed="ResizeE_PointerPressed"/>
+
+        <Border Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" Cursor="TopLeftCorner" PointerPressed="ResizeNW_PointerPressed"/>
+        <Border Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Cursor="TopRightCorner" PointerPressed="ResizeNE_PointerPressed"/>
+        <Border Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="Transparent" Cursor="BottomLeftCorner" PointerPressed="ResizeSW_PointerPressed"/>
+        <Border Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Transparent" Cursor="BottomRightCorner" PointerPressed="ResizeSE_PointerPressed"/>
+    </Grid>
+</Window>

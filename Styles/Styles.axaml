@@ -141,10 +141,34 @@
         <Setter Property="Stroke" Value="#A250FF"/>
     </Style>
 
+    <Style Selector="Button.SettingsNavBtn">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#8E9297"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Height" Value="38"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="12,0"/>
+    </Style>
+
+    <Style Selector="Button.SettingsNavBtn:pointerover">
+        <Setter Property="Background" Value="#20232B"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.SettingsNavBtn.active">
+        <Setter Property="Background" Value="#2B1A40"/>
+        <Setter Property="Foreground" Value="#A250FF"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
         <Style Selector="Button.WinActionBtn">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Width" Value="32"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -158,7 +182,7 @@
     </Style>
 
     <Style Selector="Button.WinActionBtn:pointerover">
-        <Setter Property="Background" Value="#23272F"/>
+        <Setter Property="Background" Value="#262A36"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
 

@@ -39,7 +39,7 @@ namespace RaytolfasLauncher
 
         static ModrinthCatalogService()
         {
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/0.1.0 (github.com/Raytolfas/RaytolfasLauncher)");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/1.0 (github.com/RaytolfasMC/Launcher)");
         }
 
         public static async Task<List<ModrinthSearchResultItem>> SearchAsync(string query = "", string projectType = "mod", string? gameVersion = null, int limit = 20)

@@ -93,18 +93,6 @@ namespace RaytolfasLauncher
                 }
             }
             catch { }
-
-            try
-            {
-                var uri = new Uri("avares://RaytolfasLauncher/Assets/no_internet.png");
-                if (AssetLoader.Exists(uri))
-                {
-                    acc.AvatarBitmap = new Bitmap(AssetLoader.Open(uri));
-                    AccountsListBox.ItemsSource = null;
-                    AccountsListBox.ItemsSource = settings.Accounts;
-                }
-            }
-            catch { }
         }
 
         private async void AddOffline_Click(object? sender, RoutedEventArgs e)

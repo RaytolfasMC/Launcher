@@ -31,14 +31,17 @@
                     <ListBox x:Name="AccountsListBox" Grid.Row="1" Background="#161822" BorderBrush="#202430" BorderThickness="1" CornerRadius="10" Padding="4" Margin="0,0,0,10">
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="local:AccountData">
-                                <Grid ColumnDefinitions="Auto,Auto,*" Margin="2,3">
-                                    <Border Grid.Column="0" Background="#221C30" CornerRadius="4" Padding="5,2" Margin="0,0,8,0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Type}" Foreground="#A250FF" FontSize="10" FontWeight="Bold"/>
-                                    </Border>
-                                    <Border Grid.Column="1" Width="26" Height="26" CornerRadius="6" Background="#262933" ClipToBounds="True" Margin="0,0,8,0">
+                                <Grid ColumnDefinitions="Auto,*,Auto" Margin="2,3">
+                                    <Border Grid.Column="0" Width="26" Height="26" CornerRadius="6" Background="#262933" ClipToBounds="True" Margin="0,0,8,0" VerticalAlignment="Center">
                                         <Image Source="{Binding AvatarBitmap}" Width="26" Height="26" Stretch="UniformToFill"/>
                                     </Border>
-                                    <TextBlock Grid.Column="2" Text="{Binding Username}" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Username}" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                    <Border Grid.Column="2" Background="#221C30" CornerRadius="4" Padding="5,2" Margin="6,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                            <Image Source="{Binding TypeSvgImage}" Width="12" Height="12" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Type}" Foreground="#A250FF" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

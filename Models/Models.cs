@@ -24,6 +24,46 @@ using Avalonia.Media.Imaging;
 
 namespace RaytolfasLauncher
 {
+    public static class SvgIconHelper
+    {
+        private static readonly Dictionary<string, Avalonia.Svg.Skia.SvgImage> Cache = new(StringComparer.OrdinalIgnoreCase);
+
+        public static Avalonia.Svg.Skia.SvgImage? GetAccountSvg(string? type)
+        {
+            try
+            {
+                string fileName = (type?.Trim().ToLowerInvariant()) switch
+                {
+                    "microsoft" => "microsoft.svg",
+                    "elyby" => "elyby.svg",
+                    _ => "guest.svg"
+                };
+
+                if (Cache.TryGetValue(fileName, out var cached))
+                    return cached;
+
+                var uri = new Uri($"avares://RaytolfasLauncher/Assets/{fileName}");
+                if (Avalonia.Platform.AssetLoader.Exists(uri))
+                {
+                    using var stream = Avalonia.Platform.AssetLoader.Open(uri);
+                    var source = Avalonia.Svg.Skia.SvgSource.LoadFromStream(stream);
+                    if (source != null)
+                    {
+                        var img = new Avalonia.Svg.Skia.SvgImage { Source = source };
+                        Cache[fileName] = img;
+                        return img;
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Svg load error: {ex}");
+                return null;
+            }
+        }
+    }
+
     public class AccountData
     {
         public string Username { get; set; } = "";
@@ -36,10 +76,13 @@ namespace RaytolfasLauncher
         [JsonIgnore]
         public string TypeIcon => Type switch
         {
-            "Microsoft" => "🔑",
-            "ElyBy" => "🦋",
-            _ => "👤"
+            "Microsoft" => "Microsoft",
+            "ElyBy" => "Ely.by",
+            _ => "Offline"
         };
+
+        [JsonIgnore]
+        public Avalonia.Media.IImage? TypeSvgImage => SvgIconHelper.GetAccountSvg(Type);
 
         [JsonIgnore]
         public Avalonia.Media.Imaging.Bitmap? AvatarBitmap { get; set; }
@@ -70,6 +113,16 @@ namespace RaytolfasLauncher
         public bool EnableElyBySkins { get; set; } = false;
         public string Language { get; set; } = LocalizationManager.DefaultLanguage;
         public string CustomBackgroundPath { get; set; } = "";
+        public int UiScaleIndex { get; set; } = 1;
+
+        [JsonIgnore]
+        public double UiScaleFactor => UiScaleIndex switch
+        {
+            0 => 0.85,
+            2 => 1.15,
+            _ => 1.0
+        };
+
         public bool DirectConnectServer { get; set; } = false;
         public string DirectServerAddress { get; set; } = "";
         public List<RecentGameLaunch> RecentLaunches { get; set; } = new List<RecentGameLaunch>();
