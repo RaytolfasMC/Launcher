@@ -620,7 +620,7 @@ namespace RaytolfasLauncher
             try
             {
                 using var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/0.1.0");
+                client.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/1.1");
                 var bytes = await client.GetByteArrayAsync(url);
                 using var ms = new MemoryStream(bytes);
                 ScreenshotMainImage.Source = new Bitmap(ms);

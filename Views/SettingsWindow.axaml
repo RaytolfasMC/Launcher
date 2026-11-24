@@ -179,7 +179,7 @@
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <TextBlock Text="Raytolfas Launcher" Foreground="White" FontWeight="Bold" FontSize="15" VerticalAlignment="Center"/>
                                             <Border Background="#211833" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
-                                                <TextBlock Text="v1.0" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
+                                                <TextBlock Text="v1.1" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
                                             </Border>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Spacing="4">

@@ -56,7 +56,7 @@ namespace RaytolfasLauncher
         private MinecraftLauncher? launcher;
         private LauncherSettings settings = new LauncherSettings();
         private readonly DiscordRpcClient discordClientID = new DiscordRpcClient("1472589510742118400");
-        private readonly string currentVersion = "1.0";
+        private readonly string currentVersion = "1.1";
         private readonly string updateUrl = "https://raw.githubusercontent.com/Raytolfas/Assets/refs/heads/main/RaytolfasLauncherMC/update.json";
         private const string ElyByProfileApiBaseUrl = "https://authserver.ely.by";
         private const string AuthlibInjectorLatestReleaseApiUrl = "https://api.github.com/repos/yushijinhun/authlib-injector/releases/latest";
@@ -1558,7 +1558,9 @@ namespace RaytolfasLauncher
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(microsoftAccountsPath)!);
 
+                var customOAuth = new MicrosoftOAuthProvider(new MicrosoftWebUI(this, currentLanguage));
                 var loginHandler = new JELoginHandlerBuilder()
+                    .WithOAuthProvider(customOAuth)
                     .WithAccountManager(microsoftAccountsPath)
                     .Build();
 

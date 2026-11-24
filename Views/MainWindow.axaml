@@ -89,7 +89,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                         <TextBlock x:Name="PageHeaderTitle" Text="Raytolfas Launcher" Foreground="White" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                         <Border Background="#211833" CornerRadius="6" Padding="6,2" VerticalAlignment="Center">
-                            <TextBlock x:Name="VersionText" Text="v1.0" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="VersionText" Text="v1.1" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold"/>
                         </Border>
                     </StackPanel>
 

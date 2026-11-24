@@ -485,7 +485,7 @@ namespace RaytolfasLauncher
             try
             {
                 using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(4) };
-                client.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/1.0");
+                client.DefaultRequestHeaders.Add("User-Agent", "RaytolfasLauncher/1.1");
                 string json = await client.GetStringAsync(RepoJsonUrl);
                 using var doc = JsonDocument.Parse(json);
                 if (doc.RootElement.TryGetProperty("url", out var prop))

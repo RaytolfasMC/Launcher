@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="RaytolfasLauncher.MicrosoftLoginDialog"
+        Title="Авторизация Microsoft"
+        Width="480" Height="290"
+        WindowStartupLocation="CenterOwner"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        CanResize="False">
+
+    <Border Background="#101217" BorderBrush="#202430" BorderThickness="1" CornerRadius="16" Padding="20">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+                <TextBlock x:Name="TitleText" Text="ВХОД ЧЕРЕЗ MICROSOFT" Foreground="White" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Click="Cancel_Click" Width="28" Height="28" CornerRadius="6" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <PathIcon Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" Width="10" Height="10" Foreground="#8E9297"/>
+                </Button>
+            </Grid>
+
+            <TextBlock x:Name="Step1Text" Grid.Row="1" Text="В вашем браузере открыта страница входа Microsoft." Foreground="#8E9297" FontSize="11" Margin="0,0,0,4" TextWrapping="Wrap"/>
+
+            <TextBlock x:Name="Step2Text" Grid.Row="2" Text="После завершения входа скопируйте адрес (URL) из адресной строки и вставьте сюда:" Foreground="#CCCCCC" FontSize="11" Margin="0,0,0,8" TextWrapping="Wrap"/>
+
+            <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+                <TextBox x:Name="UrlTextBox" Grid.Column="0" Watermark="https://login.live.com/oauth20_desktop.srf?code=..." Background="#161822" Foreground="White" BorderBrush="#252A38" BorderThickness="1" CornerRadius="8,0,0,8" Padding="12,8" VerticalContentAlignment="Center" KeyDown="UrlTextBox_KeyDown"/>
+                <Button x:Name="PasteButton" Grid.Column="1" Content="Вставить" Click="Paste_Click" Background="#20232B" Foreground="White" BorderBrush="#252A38" BorderThickness="0,1,1,1" CornerRadius="0,8,8,0" Height="36" Padding="12,0" Cursor="Hand" VerticalContentAlignment="Center"/>
+            </Grid>
+
+            <TextBlock x:Name="ErrorText" Grid.Row="4" Foreground="#FF6B6B" FontSize="10" Margin="0,0,0,10" IsVisible="False" TextWrapping="Wrap"/>
+
+            <Grid Grid.Row="5" ColumnDefinitions="Auto,*,Auto,Auto">
+                <Button x:Name="OpenBrowserButton" Grid.Column="0" Content="Открыть снова" Click="OpenBrowser_Click" Height="36" Background="Transparent" Foreground="#A250FF" FontSize="11" FontWeight="SemiBold" Cursor="Hand" BorderThickness="0" Padding="0"/>
+                <Button x:Name="CancelButton" Grid.Column="2" Content="ОТМЕНА" Click="Cancel_Click" Height="36" Width="90" Margin="0,0,8,0" Background="#1E2028" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="8" Cursor="Hand" BorderThickness="0"/>
+                <Button x:Name="ConfirmButton" Grid.Column="3" Content="ВОЙТИ" Click="Confirm_Click" Height="36" Width="100" Background="#A250FF" Foreground="White" FontSize="11" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="8" Cursor="Hand" BorderThickness="0"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

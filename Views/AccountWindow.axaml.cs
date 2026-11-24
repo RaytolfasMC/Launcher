@@ -123,7 +123,9 @@ namespace RaytolfasLauncher
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(microsoftAccountsPath)!);
 
+                var customOAuth = new MicrosoftOAuthProvider(new MicrosoftWebUI(this, language));
                 var loginHandler = new JELoginHandlerBuilder()
+                    .WithOAuthProvider(customOAuth)
                     .WithAccountManager(microsoftAccountsPath)
                     .Build();
 
@@ -149,6 +151,9 @@ namespace RaytolfasLauncher
 
                 RefreshList();
                 AccountsListBox.SelectedItem = newAcc;
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
