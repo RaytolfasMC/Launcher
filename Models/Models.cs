@@ -131,7 +131,10 @@ namespace RaytolfasLauncher
         {
             try
             {
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "launcher_settings.json");
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string dir = Path.Combine(appData, "RaytolfasLauncher");
+                Directory.CreateDirectory(dir);
+                string path = Path.Combine(dir, "settings.json");
                 string json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(path, json);
             }

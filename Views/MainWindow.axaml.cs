@@ -2774,6 +2774,7 @@ namespace RaytolfasLauncher
             await win.ShowDialog(this);
             if (win.SettingsSaved)
             {
+                SaveSettings();
                 ApplyUiScale();
                 SetCustomBackground(settings.CustomBackgroundPath);
                 currentLanguage = LocalizationManager.NormalizeLanguage(settings.Language);

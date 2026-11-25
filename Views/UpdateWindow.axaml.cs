@@ -29,7 +29,9 @@ namespace RaytolfasLauncher
             NewVerText.Text = newVer;
             ChangelogText.Text = changelog;
             downloadUrl = url;
-            tempFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PlatformHelper.IsWindows ? "update_temp.exe" : "update_temp");
+            string tempDir = Path.Combine(Path.GetTempPath(), "RaytolfasLauncher");
+            Directory.CreateDirectory(tempDir);
+            tempFile = Path.Combine(tempDir, PlatformHelper.IsWindows ? $"update_{Guid.NewGuid():N}.exe" : $"update_{Guid.NewGuid():N}");
             ApplyLocalization();
         }
 
@@ -83,7 +85,7 @@ namespace RaytolfasLauncher
 
         private void RestartBtn_Click(object? sender, RoutedEventArgs e)
         {
-            string? currentExe = Process.GetCurrentProcess().MainModule?.FileName;
+            string? currentExe = Environment.ProcessPath ?? Process.GetCurrentProcess().MainModule?.FileName;
             if (string.IsNullOrEmpty(currentExe))
                 return;
 

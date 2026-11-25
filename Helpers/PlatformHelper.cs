@@ -385,36 +385,62 @@ namespace RaytolfasLauncher
         {
             if (IsWindows)
             {
-                string finalExeName = "RaytolfasLauncher.exe";
-                string finalExePath = Path.Combine(baseDirectory, finalExeName);
+                string finalExePath = !string.IsNullOrEmpty(currentExe) ? currentExe : Path.Combine(baseDirectory, "RaytolfasLauncher.exe");
+                string exeName = Path.GetFileName(finalExePath);
 
-                string batchScript = $@"
-@echo off
+                string batchScript = $@"@echo off
 timeout /t 2 /nobreak > nul
 :loop
-del /f /q ""{currentExe}""
-if exist ""{currentExe}"" goto loop
-move /y ""{tempFile}"" ""{finalExePath}""
+taskkill /f /im ""{exeName}"" > nul 2>&1
+del /f /q ""{finalExePath}"" > nul 2>&1
+if exist ""{finalExePath}"" goto loop
+move /y ""{tempFile}"" ""{finalExePath}"" > nul
 start """" ""{finalExePath}""
-del ""%~f0""";
+del ""%~f0""
+";
 
-                string batchPath = Path.Combine(baseDirectory, "update.bat");
+                string tempDir = Path.Combine(Path.GetTempPath(), "RaytolfasLauncher");
+                Directory.CreateDirectory(tempDir);
+                string batchPath = Path.Combine(tempDir, $"update_{Guid.NewGuid():N}.bat");
                 File.WriteAllText(batchPath, batchScript, System.Text.Encoding.Default);
 
-                Process.Start(new ProcessStartInfo
+                bool needsElevation = !HasDirectoryWriteAccess(baseDirectory);
+
+                var psi = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
                     Arguments = $"/c \"{batchPath}\"",
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                });
+                    UseShellExecute = needsElevation,
+                    CreateNoWindow = !needsElevation
+                };
+
+                if (needsElevation)
+                {
+                    psi.Verb = "runas";
+                    psi.WindowStyle = ProcessWindowStyle.Hidden;
+                }
+
+                try
+                {
+                    Process.Start(psi);
+                }
+                catch
+                {
+                    psi.UseShellExecute = true;
+                    psi.Verb = "runas";
+                    try
+                    {
+                        Process.Start(psi);
+                    }
+                    catch { }
+                }
             }
             else
             {
-                string finalExePath = Path.Combine(baseDirectory, Path.GetFileName(currentExe));
+                string finalExePath = !string.IsNullOrEmpty(currentExe) ? currentExe : Path.Combine(baseDirectory, Path.GetFileName(currentExe));
                 string shScript = $@"#!/bin/sh
 sleep 2
-rm -f ""{currentExe}""
+rm -f ""{finalExePath}""
 mv -f ""{tempFile}"" ""{finalExePath}""
 chmod +x ""{finalExePath}""
 if [ ""$(uname)"" = ""Darwin"" ]; then
@@ -423,7 +449,9 @@ fi
 nohup ""{finalExePath}"" >/dev/null 2>&1 &
 rm -f ""$0""
 ";
-                string shPath = Path.Combine(baseDirectory, "update.sh");
+                string tempDir = Path.Combine(Path.GetTempPath(), "RaytolfasLauncher");
+                Directory.CreateDirectory(tempDir);
+                string shPath = Path.Combine(tempDir, $"update_{Guid.NewGuid():N}.sh");
                 File.WriteAllText(shPath, shScript);
 
                 try
@@ -439,6 +467,21 @@ rm -f ""$0""
                     CreateNoWindow = true,
                     UseShellExecute = false
                 });
+            }
+        }
+
+        private static bool HasDirectoryWriteAccess(string directory)
+        {
+            try
+            {
+                string testFile = Path.Combine(directory, $".write_test_{Guid.NewGuid():N}.tmp");
+                File.WriteAllText(testFile, "test");
+                File.Delete(testFile);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
